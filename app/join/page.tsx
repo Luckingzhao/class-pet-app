@@ -1,22 +1,55 @@
+"use client";
+
 import Link from "next/link";
-import { joinClass } from "./actions";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
-type PageProps = {
-  searchParams: Promise<{
-    error?: string;
-  }>;
-};
+export default function JoinPage() {
+  const router = useRouter();
 
-function getErrorMessage(error?: string) {
-  if (error === "missing") return "请填写班级邀请码和学生姓名。";
-  if (error === "class_not_found") return "没有找到这个班级邀请码，请检查是否输入正确。";
-  if (error === "student_not_found") return "没有找到这个学生，请确认姓名是否和老师添加的一致。";
-  return "";
-}
+  const [classCode, setClassCode] = useState("");
+  const [name, setName] = useState("");
+  const [viewCode, setViewCode] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
-export default async function JoinPage({ searchParams }: PageProps) {
-  const { error } = await searchParams;
-  const errorMessage = getErrorMessage(error);
+  async function handleJoin() {
+    setErrorMessage("");
+
+    if (!classCode.trim() || !name.trim() || !viewCode.trim()) {
+      setErrorMessage("请填写班级邀请码、学生姓名和个人查看码。");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const res = await fetch("/api/student/join", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          classCode: classCode.trim().toUpperCase(),
+          name: name.trim(),
+          viewCode: viewCode.trim(),
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setErrorMessage(data.error || "验证失败，请检查信息是否正确。");
+        return;
+      }
+
+      router.push(`/student/${data.student.id}?code=${viewCode.trim()}`);
+    } catch {
+      setErrorMessage("网络异常，请稍后再试。");
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-green-50 via-yellow-50 to-blue-50 px-6 py-10">
@@ -30,7 +63,7 @@ export default async function JoinPage({ searchParams }: PageProps) {
             </h1>
 
             <p className="mt-3 text-gray-500">
-              输入老师提供的班级邀请码和你的姓名，查看自己的电子宠物。
+              输入老师提供的班级邀请码、你的姓名和个人查看码。
             </p>
           </div>
 
@@ -40,13 +73,14 @@ export default async function JoinPage({ searchParams }: PageProps) {
             </div>
           ) : null}
 
-          <form action={joinClass} className="mt-8 space-y-5">
+          <div className="mt-8 space-y-5">
             <div>
               <label className="text-sm font-semibold text-gray-700">
                 班级邀请码
               </label>
               <input
-                name="invite_code"
+                value={classCode}
+                onChange={(e) => setClassCode(e.target.value)}
                 placeholder="例如：ABC123"
                 className="mt-2 w-full rounded-2xl border border-gray-200 px-4 py-3 text-gray-900 placeholder-gray-400 outline-none focus:border-green-500 focus:ring-2 focus:ring-green-100"
               />
@@ -57,19 +91,34 @@ export default async function JoinPage({ searchParams }: PageProps) {
                 学生姓名
               </label>
               <input
-                name="student_name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
                 placeholder="请输入老师添加的姓名"
                 className="mt-2 w-full rounded-2xl border border-gray-200 px-4 py-3 text-gray-900 placeholder-gray-400 outline-none focus:border-green-500 focus:ring-2 focus:ring-green-100"
               />
             </div>
 
+            <div>
+              <label className="text-sm font-semibold text-gray-700">
+                个人查看码
+              </label>
+              <input
+                value={viewCode}
+                onChange={(e) => setViewCode(e.target.value)}
+                placeholder="请输入老师给你的6位查看码"
+                className="mt-2 w-full rounded-2xl border border-gray-200 px-4 py-3 text-gray-900 placeholder-gray-400 outline-none focus:border-green-500 focus:ring-2 focus:ring-green-100"
+              />
+            </div>
+
             <button
-              type="submit"
-              className="w-full rounded-2xl bg-green-600 px-5 py-3 text-base font-bold text-white hover:bg-green-700"
+              type="button"
+              onClick={handleJoin}
+              disabled={loading}
+              className="w-full rounded-2xl bg-green-600 px-5 py-3 text-base font-bold text-white hover:bg-green-700 disabled:cursor-not-allowed disabled:bg-gray-400"
             >
-              进入我的宠物页面
+              {loading ? "验证中..." : "进入我的宠物页面"}
             </button>
-          </form>
+          </div>
 
           <div className="mt-6 text-center">
             <Link

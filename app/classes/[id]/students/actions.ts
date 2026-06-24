@@ -18,6 +18,10 @@ async function getCurrentUser() {
   return { supabase, user };
 }
 
+function generateViewCode() {
+  return Math.floor(100000 + Math.random() * 900000).toString();
+}
+
 export async function addStudent(classId: string, formData: FormData) {
   const { supabase, user } = await getCurrentUser();
 
@@ -40,6 +44,8 @@ export async function addStudent(classId: string, formData: FormData) {
     throw new Error("没有权限操作这个班级");
   }
 
+  const viewCode = generateViewCode();
+
   const { data: student, error: studentError } = await supabase
     .from("students")
     .insert({
@@ -47,6 +53,7 @@ export async function addStudent(classId: string, formData: FormData) {
       name,
       student_no: studentNo || null,
       group_name: groupName || null,
+      view_code: viewCode,
     })
     .select("id, name")
     .single();
@@ -70,6 +77,7 @@ export async function addStudent(classId: string, formData: FormData) {
   }
 
   revalidatePath(`/classes/${classId}/students`);
+  revalidatePath(`/classes/${classId}`);
 }
 
 export async function deleteStudent(classId: string, studentId: string) {
@@ -97,4 +105,5 @@ export async function deleteStudent(classId: string, studentId: string) {
   }
 
   revalidatePath(`/classes/${classId}/students`);
+  revalidatePath(`/classes/${classId}`);
 }

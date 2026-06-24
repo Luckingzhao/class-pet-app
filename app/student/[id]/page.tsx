@@ -1,10 +1,13 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { redirect, notFound } from "next/navigation";
 import { createClient } from "../../lib/supabase/server";
 
 type PageProps = {
   params: Promise<{
     id: string;
+  }>;
+  searchParams: Promise<{
+    code?: string;
   }>;
 };
 
@@ -30,6 +33,7 @@ type StudentItem = {
   name: string;
   student_no: string | null;
   group_name: string | null;
+  view_code: string;
   classes: ClassItem | ClassItem[] | null;
   pets: PetItem | PetItem[] | null;
 };
@@ -97,8 +101,17 @@ function formatDate(dateText: string) {
   }).format(new Date(dateText));
 }
 
-export default async function StudentPetPage({ params }: PageProps) {
+export default async function StudentPetPage({
+  params,
+  searchParams,
+}: PageProps) {
   const { id } = await params;
+  const { code } = await searchParams;
+
+  if (!code) {
+    redirect("/join");
+  }
+
   const supabase = await createClient();
 
   const { data: studentData, error } = await supabase
@@ -108,6 +121,7 @@ export default async function StudentPetPage({ params }: PageProps) {
       name,
       student_no,
       group_name,
+      view_code,
       classes (
         id,
         name,
@@ -125,10 +139,11 @@ export default async function StudentPetPage({ params }: PageProps) {
       )
     `)
     .eq("id", id)
+    .eq("view_code", code)
     .single();
 
   if (error || !studentData) {
-    notFound();
+    redirect("/join");
   }
 
   const { data: logs, error: logsError } = await supabase
