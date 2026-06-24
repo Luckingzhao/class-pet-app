@@ -34,6 +34,13 @@ type StudentItem = {
   pets: PetItem | PetItem[] | null;
 };
 
+type LogItem = {
+  id: string;
+  points: number;
+  reason: string | null;
+  created_at: string;
+};
+
 function getPetFromStudent(student: StudentItem) {
   if (!student.pets) return null;
   if (Array.isArray(student.pets)) return student.pets[0] || null;
@@ -67,6 +74,27 @@ function getHungerLabel(hunger: number) {
 
 function getLevelProgress(exp: number) {
   return exp % 100;
+}
+
+function getPointText(points: number) {
+  return points > 0 ? `+${points}` : `${points}`;
+}
+
+function getPointStyle(points: number) {
+  if (points > 0) {
+    return "bg-green-50 text-green-700";
+  }
+
+  return "bg-red-50 text-red-700";
+}
+
+function formatDate(dateText: string) {
+  return new Intl.DateTimeFormat("zh-CN", {
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(new Date(dateText));
 }
 
 export default async function StudentPetPage({ params }: PageProps) {
@@ -103,10 +131,22 @@ export default async function StudentPetPage({ params }: PageProps) {
     notFound();
   }
 
+  const { data: logs, error: logsError } = await supabase
+    .from("point_logs")
+    .select("id, points, reason, created_at")
+    .eq("student_id", id)
+    .order("created_at", { ascending: false })
+    .limit(10);
+
+  if (logsError) {
+    throw new Error(logsError.message);
+  }
+
   const student = studentData as StudentItem;
   const pet = getPetFromStudent(student);
   const classItem = getClassFromStudent(student);
   const progress = pet ? getLevelProgress(pet.exp) : 0;
+  const typedLogs = (logs || []) as LogItem[];
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-green-50 via-yellow-50 to-blue-50 px-6 py-10">
@@ -187,6 +227,55 @@ export default async function StudentPetPage({ params }: PageProps) {
               </p>
             </div>
           )}
+        </section>
+
+        <section className="mt-8 rounded-[2rem] bg-white p-8 shadow-sm ring-1 ring-gray-100">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-2xl font-black text-gray-900">
+                最近成长记录
+              </h2>
+              <p className="mt-2 text-sm text-gray-500">
+                这里会显示老师最近给你的加分和扣分记录。
+              </p>
+            </div>
+
+            <div className="text-4xl">📒</div>
+          </div>
+
+          <div className="mt-6 space-y-4">
+            {typedLogs.length > 0 ? (
+              typedLogs.map((log) => (
+                <div
+                  key={log.id}
+                  className="flex items-center justify-between rounded-2xl border border-gray-100 bg-gray-50 p-4"
+                >
+                  <div>
+                    <p className="font-bold text-gray-900">
+                      {log.reason || "成长记录"}
+                    </p>
+                    <p className="mt-1 text-sm text-gray-500">
+                      {formatDate(log.created_at)}
+                    </p>
+                  </div>
+
+                  <div
+                    className={`rounded-full px-4 py-2 text-lg font-black ${getPointStyle(
+                      log.points
+                    )}`}
+                  >
+                    {getPointText(log.points)}
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="rounded-2xl border border-dashed border-gray-300 p-8 text-center">
+                <p className="text-gray-500">
+                  还没有成长记录。继续努力，等待老师给你记录表现吧！
+                </p>
+              </div>
+            )}
+          </div>
         </section>
       </div>
     </main>
