@@ -59,11 +59,11 @@ export default function JoinPage() {
             <div className="text-6xl">🐾</div>
 
             <h1 className="mt-5 text-3xl font-black text-gray-900">
-              加入班级宠物乐园
+              加入班级宠物积分乐园
             </h1>
 
             <p className="mt-3 text-gray-500">
-              输入老师提供的班级邀请码、你的姓名和个人查看码。
+              输入班级邀请码、你的姓名和个人查看码，查看宠物成长记录。
             </p>
           </div>
 

@@ -4,6 +4,14 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "../../../lib/supabase/server";
 
+const AVATARS = [
+  "🐱", "🐶", "🐰", "🐼", "🦊", "🐯", "🦁", "🐸", "🐵", "🐨",
+  "🐻", "🐷", "🐹", "🐭", "🐧", "🐤", "🦄", "🐲", "🐙", "🦖",
+  "🦕", "🐢", "🐳", "🐬", "🦈", "🐝", "🦋", "🐞", "🦉", "🦅",
+  "🐺", "🦝", "🦥", "🦦", "🦔", "🐿️", "🦘", "🦒", "🦓", "🐘",
+  "🦛", "🦏", "🐪", "🐫", "🦙", "🐐", "🐑", "🐴", "🐮", "🐥",
+];
+
 async function getCurrentUser() {
   const supabase = await createClient();
 
@@ -22,12 +30,17 @@ function generateViewCode() {
   return Math.floor(100000 + Math.random() * 900000).toString();
 }
 
+function getRandomAvatar() {
+  return AVATARS[Math.floor(Math.random() * AVATARS.length)];
+}
+
 export async function addStudent(classId: string, formData: FormData) {
   const { supabase, user } = await getCurrentUser();
 
   const name = String(formData.get("name") || "").trim();
   const studentNo = String(formData.get("student_no") || "").trim();
   const groupName = String(formData.get("group_name") || "").trim();
+  const avatar = String(formData.get("avatar") || "").trim() || getRandomAvatar();
 
   if (!name) {
     throw new Error("学生姓名不能为空");
@@ -54,6 +67,7 @@ export async function addStudent(classId: string, formData: FormData) {
       student_no: studentNo || null,
       group_name: groupName || null,
       view_code: viewCode,
+      avatar,
     })
     .select("id, name")
     .single();
@@ -74,6 +88,44 @@ export async function addStudent(classId: string, formData: FormData) {
 
   if (petError) {
     throw new Error(petError.message);
+  }
+
+  revalidatePath(`/classes/${classId}/students`);
+  revalidatePath(`/classes/${classId}`);
+}
+
+export async function updateStudentAvatar(
+  classId: string,
+  studentId: string,
+  formData: FormData
+) {
+  const { supabase, user } = await getCurrentUser();
+
+  const avatar = String(formData.get("avatar") || "").trim();
+
+  if (!avatar) {
+    throw new Error("请选择头像");
+  }
+
+  const { data: classItem } = await supabase
+    .from("classes")
+    .select("id")
+    .eq("id", classId)
+    .eq("teacher_id", user.id)
+    .single();
+
+  if (!classItem) {
+    throw new Error("没有权限操作这个班级");
+  }
+
+  const { error } = await supabase
+    .from("students")
+    .update({ avatar })
+    .eq("id", studentId)
+    .eq("class_id", classId);
+
+  if (error) {
+    throw new Error(error.message);
   }
 
   revalidatePath(`/classes/${classId}/students`);

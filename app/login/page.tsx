@@ -82,7 +82,7 @@ export default function LoginPage() {
               {mode === "login" ? "老师登录" : "新老师注册"}
             </h1>
             <p className="mt-3 text-sm text-gray-500">
-              班级电子宠物打卡系统
+              班级课件宠物积分系统
             </p>
           </div>
 

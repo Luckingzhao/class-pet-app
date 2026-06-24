@@ -137,7 +137,7 @@ export default async function DisplayPage({ params }: PageProps) {
         </div>
 
         <header className="mb-8 rounded-[2rem] bg-white/80 p-8 text-center shadow-sm ring-1 ring-white">
-          <p className="text-lg font-semibold text-green-700">班级电子宠物大屏</p>
+          <p className="text-lg font-semibold text-green-700">班级课件宠物积分大屏</p>
 
           <h1 className="mt-3 text-5xl font-black tracking-tight text-gray-900">
             🐾 {classItem.name} 宠物乐园
