@@ -48,3 +48,37 @@ export async function createClass(formData: FormData) {
 
   revalidatePath("/dashboard");
 }
+export async function deleteClass(classId: string) {
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect("/login");
+  }
+
+  const { data: classItem } = await supabase
+    .from("classes")
+    .select("id")
+    .eq("id", classId)
+    .eq("teacher_id", user.id)
+    .single();
+
+  if (!classItem) {
+    throw new Error("没有权限删除这个班级");
+  }
+
+  const { error } = await supabase
+    .from("classes")
+    .delete()
+    .eq("id", classId)
+    .eq("teacher_id", user.id);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  revalidatePath("/dashboard");
+}

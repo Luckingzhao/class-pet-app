@@ -21,6 +21,7 @@ type StudentItem = {
   name: string;
   student_no: string | null;
   group_name: string | null;
+  avatar: string | null;
   pets: PetItem | PetItem[] | null;
 };
 
@@ -79,6 +80,7 @@ export default async function PetsPage({ params }: PageProps) {
       name,
       student_no,
       group_name,
+      avatar,
       pets (
         id,
         name,
@@ -141,7 +143,7 @@ export default async function PetsPage({ params }: PageProps) {
                 >
                   {/* 宠物图标 */}
                   <div className="text-5xl animate-bounce hover:scale-125 transition-transform duration-200">
-                    {pet ? getPetEmoji(pet.pet_type) : "🐾"}
+                    {s.avatar || "🐾"}
                   </div>
 
                   {/* 学生 */}

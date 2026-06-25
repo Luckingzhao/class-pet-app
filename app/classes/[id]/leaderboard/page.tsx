@@ -23,6 +23,7 @@ type StudentItem = {
   name: string;
   student_no: string | null;
   group_name: string | null;
+  avatar: string | null;
   pets: PetItem | PetItem[] | null;
 };
 
@@ -82,6 +83,7 @@ export default async function LeaderboardPage({ params }: PageProps) {
       name,
       student_no,
       group_name,
+      avatar,
       pets (
         id,
         name,
@@ -155,7 +157,7 @@ export default async function LeaderboardPage({ params }: PageProps) {
               >
                 <div className="text-4xl">{getRankIcon(index)}</div>
                 <div className="mt-4 text-5xl">
-                  {item.pet ? getPetEmoji(item.pet.pet_type) : "🐾"}
+                  {item.student.avatar || "🐾"}
                 </div>
                 <h2 className="mt-4 text-xl font-bold text-gray-900">
                   {item.student.name}
@@ -197,7 +199,7 @@ export default async function LeaderboardPage({ params }: PageProps) {
                       </div>
 
                       <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-green-50 text-4xl">
-                        {pet ? getPetEmoji(pet.pet_type) : "🐾"}
+                        {item.student.avatar || "🐾"}
                       </div>
 
                       <div>

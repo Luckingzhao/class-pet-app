@@ -2,7 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "../lib/supabase/server";
 import { signOut } from "../auth/actions";
-import { createClass } from "./actions";
+import { createClass, deleteClass } from "./actions";
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -73,9 +73,7 @@ export default async function DashboardPage() {
           <div className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-gray-100">
             <p className="text-3xl">🐾</p>
             <p className="mt-4 text-sm font-bold text-gray-500">宠物系统</p>
-            <p className="mt-2 text-lg font-black text-green-700">
-              已启用
-            </p>
+            <p className="mt-2 text-lg font-black text-green-700">已启用</p>
           </div>
 
           <div className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-gray-100">
@@ -97,9 +95,7 @@ export default async function DashboardPage() {
 
         <div className="grid gap-6 lg:grid-cols-[380px_1fr]">
           <section className="rounded-[2rem] bg-white p-6 shadow-sm ring-1 ring-gray-100">
-            <h2 className="text-xl font-black text-gray-900">
-              创建新班级
-            </h2>
+            <h2 className="text-xl font-black text-gray-900">创建新班级</h2>
 
             <p className="mt-2 text-sm text-gray-500">
               创建班级后，系统会自动生成邀请码，学生和家长可通过邀请码进入。
@@ -118,9 +114,7 @@ export default async function DashboardPage() {
               </div>
 
               <div>
-                <label className="text-sm font-bold text-gray-700">
-                  年级
-                </label>
+                <label className="text-sm font-bold text-gray-700">年级</label>
                 <input
                   name="grade"
                   placeholder="例如：三年级"
@@ -129,9 +123,7 @@ export default async function DashboardPage() {
               </div>
 
               <div>
-                <label className="text-sm font-bold text-gray-700">
-                  学期
-                </label>
+                <label className="text-sm font-bold text-gray-700">学期</label>
                 <input
                   name="semester"
                   placeholder="例如：2026春季"
@@ -151,9 +143,7 @@ export default async function DashboardPage() {
           <section className="rounded-[2rem] bg-white p-6 shadow-sm ring-1 ring-gray-100">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
               <div>
-                <h2 className="text-xl font-black text-gray-900">
-                  我的班级
-                </h2>
+                <h2 className="text-xl font-black text-gray-900">我的班级</h2>
                 <p className="mt-2 text-sm text-gray-500">
                   进入班级后，可以管理学生、积分规则、打卡加分、排行榜和投屏模式。
                 </p>
@@ -163,17 +153,16 @@ export default async function DashboardPage() {
                 href="/join"
                 className="rounded-full bg-green-50 px-4 py-2 text-sm font-bold text-green-700 hover:bg-green-100"
               >
-                学生入口预览 →
+                家长入口预览 →
               </Link>
             </div>
 
             <div className="mt-6 grid gap-4">
               {classes && classes.length > 0 ? (
                 classes.map((classItem) => (
-                  <Link
+                  <div
                     key={classItem.id}
-                    href={`/classes/${classItem.id}`}
-                    className="group rounded-3xl border border-gray-100 bg-gray-50 p-5 transition hover:-translate-y-1 hover:bg-white hover:shadow-md"
+                    className="rounded-3xl border border-gray-100 bg-gray-50 p-5 transition hover:bg-white hover:shadow-md"
                   >
                     <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                       <div>
@@ -194,17 +183,35 @@ export default async function DashboardPage() {
                         </div>
                       </div>
 
-                      <div className="flex flex-col gap-2 sm:items-end">
+                      <div className="flex flex-col gap-3 sm:items-end">
                         <div className="rounded-full bg-yellow-100 px-4 py-2 text-sm font-black text-yellow-700">
                           邀请码：{classItem.invite_code}
                         </div>
 
-                        <p className="text-sm font-bold text-green-700 group-hover:text-green-800">
-                          进入管理 →
-                        </p>
+                        <div className="flex gap-2">
+                          <Link
+                            href={`/classes/${classItem.id}`}
+                            className="rounded-xl bg-green-600 px-4 py-2 text-sm font-black text-white hover:bg-green-700"
+                          >
+                            进入管理
+                          </Link>
+
+                          <form action={deleteClass.bind(null, classItem.id)}>
+                            <button
+                              type="submit"
+                              className="rounded-xl bg-red-50 px-4 py-2 text-sm font-black text-red-600 hover:bg-red-100"
+                            >
+                              删除班级
+                            </button>
+                          </form>
+                        </div>
                       </div>
                     </div>
-                  </Link>
+
+                    <p className="mt-4 text-xs text-gray-400">
+                      删除班级会同时影响该班级下的学生、宠物、积分规则和成长记录，请谨慎操作。
+                    </p>
+                  </div>
                 ))
               ) : (
                 <div className="rounded-3xl border border-dashed border-gray-300 p-10 text-center">

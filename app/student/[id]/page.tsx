@@ -34,6 +34,7 @@ type StudentItem = {
   student_no: string | null;
   group_name: string | null;
   view_code: string;
+  avatar: string | null;
   classes: ClassItem | ClassItem[] | null;
   pets: PetItem | PetItem[] | null;
 };
@@ -122,6 +123,7 @@ export default async function StudentPetPage({
       student_no,
       group_name,
       view_code,
+      avatar,
       classes (
         id,
         name,
@@ -191,7 +193,7 @@ export default async function StudentPetPage({
           {pet ? (
             <div className="mt-10">
               <div className="text-8xl">
-                {getPetEmoji(pet.pet_type)}
+                {student.avatar || "🐾"}
               </div>
 
               <h2 className="mt-6 text-3xl font-black text-gray-900">

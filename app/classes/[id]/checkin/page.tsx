@@ -35,6 +35,7 @@ type StudentItem = {
   name: string;
   student_no: string | null;
   group_name: string | null;
+  avatar: string | null;
   pets: PetItem | PetItem[] | null;
 };
 
@@ -127,6 +128,7 @@ export default async function CheckinPage({ params, searchParams }: PageProps) {
       name,
       student_no,
       group_name,
+      avatar,
       pets (
         id,
         name,
@@ -326,7 +328,7 @@ export default async function CheckinPage({ params, searchParams }: PageProps) {
                       >
                         <div className="flex items-center gap-4">
                           <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-green-50 text-4xl">
-                            {pet ? getPetEmoji(pet.pet_type) : "🐾"}
+                            {typedStudent.avatar || "🐾"}
                           </div>
 
                           <div>

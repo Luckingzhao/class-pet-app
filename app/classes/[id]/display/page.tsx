@@ -23,6 +23,7 @@ type StudentItem = {
   name: string;
   student_no: string | null;
   group_name: string | null;
+  avatar: string | null;
   pets: PetItem | PetItem[] | null;
 };
 
@@ -82,6 +83,7 @@ export default async function DisplayPage({ params }: PageProps) {
       name,
       student_no,
       group_name,
+      avatar,
       pets (
         id,
         name,
@@ -158,7 +160,7 @@ export default async function DisplayPage({ params }: PageProps) {
                 <div className="text-5xl">{getRankIcon(index)}</div>
 
                 <div className="mt-4 text-7xl">
-                  {item.pet ? getPetEmoji(item.pet.pet_type) : "🐾"}
+                {item.student.avatar || "🐾"}
                 </div>
 
                 <h2 className="mt-5 text-3xl font-black text-gray-900">
@@ -210,7 +212,7 @@ export default async function DisplayPage({ params }: PageProps) {
                     </div>
 
                     <div className="mt-3 text-6xl">
-                      {pet ? getPetEmoji(pet.pet_type) : "🐾"}
+                        {item.student.avatar || "🐾"}
                     </div>
 
                     <h3 className="mt-4 text-2xl font-black text-gray-900">
