@@ -124,7 +124,6 @@ export default async function StudentsPage({ params }: PageProps) {
               </h1>
 
               <p className="mt-3 text-sm text-gray-500">
-                {classItem.grade || "未设置年级"} ·{" "}
                 {classItem.semester || "未设置学期"} · 当前学生{" "}
                 <span className="font-bold text-gray-900">
                   {students?.length || 0}

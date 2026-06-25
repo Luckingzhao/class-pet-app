@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "../lib/supabase/client";
+import Link from "next/link";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -146,6 +147,14 @@ export default function LoginPage() {
             >
               {loading ? "处理中..." : mode === "login" ? "登录" : "注册"}
             </button>
+            <div className="mt-4 text-center">
+  <Link
+    href="/forgot-password"
+    className="text-sm font-bold text-green-700 hover:text-green-800"
+  >
+    忘记密码？
+  </Link>
+</div>
           </form>
 
           <div className="mt-6 text-center text-sm text-gray-600">

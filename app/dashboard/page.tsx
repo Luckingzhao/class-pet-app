@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "../lib/supabase/server";
 import { signOut } from "../auth/actions";
 import { createClass, deleteClass } from "./actions";
+import DeleteClassButton from "./DeleteClassButton";
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -108,16 +109,7 @@ export default async function DashboardPage() {
                 </label>
                 <input
                   name="name"
-                  placeholder="例如：三年级一班"
-                  className="mt-2 w-full rounded-2xl border border-gray-200 px-4 py-3 text-gray-900 placeholder-gray-400 outline-none focus:border-green-500 focus:ring-2 focus:ring-green-100"
-                />
-              </div>
-
-              <div>
-                <label className="text-sm font-bold text-gray-700">年级</label>
-                <input
-                  name="grade"
-                  placeholder="例如：三年级"
+                  placeholder="例如：三年级3班"
                   className="mt-2 w-full rounded-2xl border border-gray-200 px-4 py-3 text-gray-900 placeholder-gray-400 outline-none focus:border-green-500 focus:ring-2 focus:ring-green-100"
                 />
               </div>
@@ -126,7 +118,7 @@ export default async function DashboardPage() {
                 <label className="text-sm font-bold text-gray-700">学期</label>
                 <input
                   name="semester"
-                  placeholder="例如：2026春季"
+                  placeholder="例如：第一学期/第二学期"
                   className="mt-2 w-full rounded-2xl border border-gray-200 px-4 py-3 text-gray-900 placeholder-gray-400 outline-none focus:border-green-500 focus:ring-2 focus:ring-green-100"
                 />
               </div>
@@ -176,7 +168,6 @@ export default async function DashboardPage() {
                               {classItem.name}
                             </h3>
                             <p className="mt-1 text-sm text-gray-500">
-                              {classItem.grade || "未设置年级"} ·{" "}
                               {classItem.semester || "未设置学期"}
                             </p>
                           </div>
@@ -197,13 +188,8 @@ export default async function DashboardPage() {
                           </Link>
 
                           <form action={deleteClass.bind(null, classItem.id)}>
-                            <button
-                              type="submit"
-                              className="rounded-xl bg-red-50 px-4 py-2 text-sm font-black text-red-600 hover:bg-red-100"
-                            >
-                              删除班级
-                            </button>
-                          </form>
+                           <DeleteClassButton />
+                         </form>
                         </div>
                       </div>
                     </div>

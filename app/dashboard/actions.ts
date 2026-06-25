@@ -25,7 +25,7 @@ export async function createClass(formData: FormData) {
   }
 
   const name = String(formData.get("name") || "").trim();
-  const grade = String(formData.get("grade") || "").trim();
+  const grade = "";
   const semester = String(formData.get("semester") || "").trim();
 
   if (!name) {
