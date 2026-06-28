@@ -103,6 +103,12 @@ export default async function ClassDashboardPage({ params }: PageProps) {
       badge: "展示",
       bg: "from-indigo-200 to-purple-100",
     },
+    {
+    title: "百宝箱",
+    description: "积分达标后抽取课堂奖励",
+    href: `/classes/${id}/rewards`,
+    icon: "🎁",
+  },
   ];
 
   return (
