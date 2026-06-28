@@ -36,7 +36,7 @@ export default function HomePage() {
             <h2 className="text-4xl font-black leading-tight text-gray-950 sm:text-5xl">
               用一只可爱的宠物，
               <br />
-              记录孩子每天的成长。
+              记录孩子每天成长。
             </h2>
 
             <p className="mt-6 max-w-xl text-lg leading-8 text-gray-600">
