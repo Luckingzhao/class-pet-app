@@ -175,7 +175,7 @@ export default async function PetsPage({ params }: PageProps) {
     {getMoodLabel(pet.mood)}
   </span>
 </p>
-  <p className="font-medium">🍽️ 饥饿：{getHungerLabel(pet.hunger)}</p>
+  <p className="font-medium">🍽️ 状态：{getHungerLabel(pet.hunger)}</p>
 </div>
                   ) : (
                     <p className="mt-4 text-sm text-gray-400">
