@@ -8,7 +8,6 @@ export async function drawReward(formData: FormData) {
 
   const supabase = await createClient();
 
-  // 1. 学生信息
   const { data: student } = await supabase
     .from("students")
     .select("*")
@@ -19,34 +18,64 @@ export async function drawReward(formData: FormData) {
     return { success: false, error: "学生不存在" };
   }
 
-  // 2. 奖励池
+  const { data: pointLogs } = await supabase
+    .from("point_logs")
+    .select("points")
+    .eq("class_id", classId)
+    .eq("student_id", studentId);
+
+  const totalPoints =
+    (pointLogs || []).reduce(
+      (sum, i) => sum + Number(i.points || 0),
+      0
+    );
+
+  let allowed = 0;
+  if (totalPoints >= 100) allowed = 3;
+  else if (totalPoints >= 80) allowed = 2;
+  else if (totalPoints >= 50) allowed = 1;
+
+  const { data: rewardLogs } = await supabase
+    .from("reward_logs")
+    .select("id")
+    .eq("class_id", classId)
+    .eq("student_id", studentId);
+
+  const used = rewardLogs?.length || 0;
+
+  const remaining = allowed - used;
+
+  if (remaining <= 0) {
+    return {
+      success: false,
+      error: "抽奖次数已用完",
+      remaining: 0,
+    };
+  }
+
   const { data: rewards } = await supabase
     .from("rewards")
     .select("*")
     .eq("class_id", classId)
     .eq("active", true);
 
-  if (!rewards || rewards.length === 0) {
-    return { success: false, error: "没有可用奖励" };
+  if (!rewards?.length) {
+    return { success: false, error: "没有奖励" };
   }
 
-  // 3. 随机抽奖
-  const reward = rewards[Math.floor(Math.random() * rewards.length)];
+  const reward =
+    rewards[Math.floor(Math.random() * rewards.length)];
 
-  // 4. 写入记录
-  const { error } = await supabase.from("reward_logs").insert({
+  await supabase.from("reward_logs").insert({
     class_id: classId,
     student_id: studentId,
     reward_id: reward.id,
   });
 
-  if (error) {
-    return { success: false, error: error.message };
-  }
-
   return {
     success: true,
     rewardTitle: reward.title,
     studentName: student.name,
+    remaining: remaining - 1,
   };
 }

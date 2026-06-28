@@ -55,61 +55,63 @@ export default async function ClassDashboardPage({ params }: PageProps) {
     ]);
 
   const featureCards = [
-    {
-      title: "学生小档案",
-      desc: "管理学生、头像、成长记录",
-      href: `/classes/${id}/students`,
-      icon: "🧸",
-      badge: "基础",
-      bg: "from-pink-200 to-orange-100",
-    },
-    {
-      title: "积分小规则",
-      desc: "设置奖励与扣分规则",
-      href: `/classes/${id}/rules`,
-      icon: "⭐",
-      badge: "规则",
-      bg: "from-yellow-200 to-orange-100",
-    },
-    {
-      title: "课堂加分",
-      desc: "一键给学生加分或扣分",
-      href: `/classes/${id}/checkin`,
-      icon: "🍭",
-      badge: "常用",
-      bg: "from-emerald-200 to-green-100",
-    },
-    {
-      title: "宠物乐园",
-      desc: "查看每个学生的成长宠物",
-      href: `/classes/${id}/pets`,
-      icon: "🐣",
-      badge: "成长",
-      bg: "from-purple-200 to-pink-100",
-    },
-    {
-      title: "小小排行榜",
-      desc: "看看谁是今天的明星",
-      href: `/classes/${id}/leaderboard`,
-      icon: "🏆",
-      badge: "激励",
-      bg: "from-sky-200 to-blue-100",
-    },
-    {
-      title: "教室大屏",
-      desc: "投屏展示课堂数据",
-      href: `/classes/${id}/display`,
-      icon: "📺",
-      badge: "展示",
-      bg: "from-indigo-200 to-purple-100",
-    },
-    {
+  {
+    title: "学生小档案",
+    desc: "管理学生、头像、成长记录",
+    href: `/classes/${id}/students`,
+    icon: "🧸",
+    badge: "基础",
+    bg: "from-pink-200 to-orange-100",
+  },
+  {
+    title: "积分小规则",
+    desc: "设置奖励与扣分规则",
+    href: `/classes/${id}/rules`,
+    icon: "⭐",
+    badge: "规则",
+    bg: "from-yellow-200 to-orange-100",
+  },
+  {
+    title: "课堂加分",
+    desc: "一键给学生加分或扣分",
+    href: `/classes/${id}/checkin`,
+    icon: "🍭",
+    badge: "常用",
+    bg: "from-emerald-200 to-green-100",
+  },
+  {
+    title: "宠物乐园",
+    desc: "查看每个学生的成长宠物",
+    href: `/classes/${id}/pets`,
+    icon: "🐣",
+    badge: "成长",
+    bg: "from-purple-200 to-pink-100",
+  },
+  {
+    title: "小小排行榜",
+    desc: "看看谁是今天的明星",
+    href: `/classes/${id}/leaderboard`,
+    icon: "🏆",
+    badge: "激励",
+    bg: "from-sky-200 to-blue-100",
+  },
+  {
+    title: "教室大屏",
+    desc: "投屏展示课堂数据",
+    href: `/classes/${id}/display`,
+    icon: "📺",
+    badge: "展示",
+    bg: "from-indigo-200 to-purple-100",
+  },
+  {
     title: "百宝箱",
-    description: "积分达标后抽取课堂奖励",
+    desc: "积分达标后抽取课堂奖励",
     href: `/classes/${id}/rewards`,
     icon: "🎁",
+    badge: "互动",
+    bg: "from-orange-200 to-pink-100",
   },
-  ];
+];
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-pink-50 px-4 py-6">
