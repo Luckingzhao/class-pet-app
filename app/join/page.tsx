@@ -81,7 +81,7 @@ export default function JoinPage() {
               <input
                 value={classCode}
                 onChange={(e) => setClassCode(e.target.value)}
-                placeholder="例如：ABC123"
+                placeholder="请输入邀请码"
                 className="mt-2 w-full rounded-2xl border border-gray-200 px-4 py-3 text-gray-900 placeholder-gray-400 outline-none focus:border-green-500 focus:ring-2 focus:ring-green-100"
               />
             </div>
@@ -93,7 +93,7 @@ export default function JoinPage() {
               <input
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="请输入老师添加的姓名"
+                placeholder="请输入学生姓名"
                 className="mt-2 w-full rounded-2xl border border-gray-200 px-4 py-3 text-gray-900 placeholder-gray-400 outline-none focus:border-green-500 focus:ring-2 focus:ring-green-100"
               />
             </div>
@@ -105,7 +105,7 @@ export default function JoinPage() {
               <input
                 value={viewCode}
                 onChange={(e) => setViewCode(e.target.value)}
-                placeholder="请输入老师给你的6位查看码"
+                placeholder="请输入6位查看码"
                 className="mt-2 w-full rounded-2xl border border-gray-200 px-4 py-3 text-gray-900 placeholder-gray-400 outline-none focus:border-green-500 focus:ring-2 focus:ring-green-100"
               />
             </div>
